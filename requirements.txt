@@ -1,0 +1,8 @@
+python-dotenv==1.0.0
+openai==0.28.1
+numpy==1.23.5
+beautifulsoup4==4.12.2
+cloudscraper==1.2.71
+requests_html==0.10.0
+psycopg2==2.9.6
+nltk==3.8.1

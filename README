@@ -1,0 +1,41 @@
+# Agregactus V1.0
+
+## Overview
+
+Agregactus is your go-to tool for effortlessly staying informed and sharing summarized news on social media. It not only scrapes news websites, summarizes articles, and generates tweets but also poses insightful questions alongside. All of this is neatly stored in a PostgreSQL database and sent via email.
+
+## Features
+* Web Scraping: Extracts the latest news from specified websites.
+* Summarization: Condenses articles while retaining key information.
+* ChatGPT Integration: Crafts engaging tweets and questions using ChatGPT.
+* Database Storage: Utilizes PostgreSQL to store tweet and question data.
+* Email Notification: Sends tweets and questions via email.
+* Configurability: Easily configurable through a .env file for email, OpenAI key, and database information.
+
+## Getting Started
+
+### Prerequisites
+Python 3.x
+PostgreSQL
+Dependencies listed in requirements.txt
+
+### Installation
+Clone the repository:
+
+git clone https://github.com/BenjaminDemolin/Agregactus-v1.0.git
+cd Agregactus-v1.0
+
+### Install dependencies:
+
+
+pip install -r requirements.txt
+
+Configure your .env. See .env.example for an example.
+
+
+### Run Agregactus:
+
+python main.py
+
+
+
