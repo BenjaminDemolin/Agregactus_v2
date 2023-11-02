@@ -42,6 +42,14 @@ def create_main_category_table():
         print(e)
         return False
 
+def create_configuration_table():
+    try:
+        connector.create_table(TABLE_CONFIGURATION_NAME,TABLE_CONFIGURATION_COLUMNS)
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
 def create_tables():
     try:
         connector.create_table(TABLE_WEBSITES_NAME,TABLE_WEBSITES_COLUMNS)
@@ -134,6 +142,13 @@ def insert_row_main_category_table(name):
         print(e)
         return False
 
+def insert_row_configuration_table(name,value):
+    try:
+        return connector.insert_row(TABLE_CONFIGURATION_NAME,"name,value","'%s','%s'" % (name,value))
+    except Exception as e:
+        print(e)
+        return False
+
 def get_all_websites():
     try:
         return connector.select_rows(TABLE_WEBSITES_NAME)
@@ -141,6 +156,13 @@ def get_all_websites():
         print(e)
         return False
 
+def get_all_configuration():
+    try:
+        return connector.select_rows(TABLE_CONFIGURATION_NAME)
+    except Exception as e:
+        print(e)
+        return False
+    
 def get_website_url_by_name(name):
     try:
         return connector.select_rows(TABLE_WEBSITES_NAME,"url","name = '%s'" % (name.lower()))[0][0]
@@ -176,6 +198,13 @@ def get_main_category_id(name):
         print(e)
         return False
 
+def get_configuration_value_by_name(name):
+    try:
+        return connector.select_rows(TABLE_CONFIGURATION_NAME,"value","name = '%s'" % (name))[0][0]
+    except Exception as e:
+        print(e)
+        return False
+    
 def insert_row_news_table(website_name,url,ia_tweet=None,question=None,main_category=None,date=None):
     try:
         website_id = get_website_id_by_name(website_name)[0][0]
@@ -229,6 +258,13 @@ def update_question_news_table(url,question=None):
         print(e)
         return False
 
+def update_configuration_value_by_name(name,value):
+    try:
+        return connector.update_row(TABLE_CONFIGURATION_NAME,"value = '%s'" % (value),"name = '%s'" % (name))
+    except Exception as e:
+        print(e)
+        return False
+
 def row_exists_news_table(url):
     try:
         if(len(connector.select_rows(TABLE_NEWS_NAME,condition ="url = '%s'" % (url))) == 0):
@@ -252,6 +288,13 @@ def table_news_exists():
         print(e)
         return False
     
+def table_configuration_exists():
+    try:
+        return connector.check_table_exists(TABLE_CONFIGURATION_NAME)
+    except Exception as e:
+        print(e)
+        return False
+    
 def table_main_category_exists():
     try:
         return connector.check_table_exists(TABLE_MAIN_CATEGORY_NAME)
@@ -263,6 +306,15 @@ def init_websites_table():
     try:
         for website in TABLE_WEBSITES_INIT:
             insert_row_websites_table(website[0],website[1])
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def init_configuration_table():
+    try:
+        for configuration in TABLE_CONFIGURATION_INIT:
+            insert_row_configuration_table(configuration[0],configuration[1])
         return True
     except Exception as e:
         print(e)
@@ -295,4 +347,17 @@ def update_email_sent_news_table(url):
     except Exception as e:
         print(e)
         return False
-   
+    
+def update_tweet_sent_news_table(url):
+    try:
+        return connector.update_row(TABLE_NEWS_NAME,"tweet_sent = TRUE","url = '%s'" % (url))
+    except Exception as e:
+        print(e)
+        return False
+
+def get_tweet_since_date(date_timestamp):
+    try:
+        return connector.select_rows(TABLE_NEWS_NAME,columns='website_id,url,ia_tweet',condition="ia_tweet != 'NULL' AND date > %s" % (date_timestamp))
+    except Exception as e:
+        print(e)
+        return False

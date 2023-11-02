@@ -8,4 +8,9 @@ TABLE_MAIN_CATEGORY_NAME = "main_category"
 TABLE_MAIN_CATEGORY_COLUMNS = "main_category_id SERIAL PRIMARY KEY, name TEXT NOT NULL UNIQUE"
 
 TABLE_NEWS_NAME = "news"
-TABLE_NEWS_COLUMNS = " news_id SERIAL PRIMARY KEY, website_id INT REFERENCES websites (website_id), url TEXT NOT NULL UNIQUE, ia_tweet TEXT, question TEXT, main_category_id INT REFERENCES main_category (main_category_id), date BIGINT, email_sent BOOLEAN DEFAULT FALSE"
+TABLE_NEWS_COLUMNS = " news_id SERIAL PRIMARY KEY, website_id INT REFERENCES websites (website_id), url TEXT NOT NULL UNIQUE, ia_tweet TEXT, question TEXT, main_category_id INT REFERENCES main_category (main_category_id), date BIGINT, email_sent BOOLEAN DEFAULT FALSE, tweet_sent BOOLEAN DEFAULT FALSE"
+
+TABLE_CONFIGURATION_NAME = "configuration"
+TABLE_CONFIGURATION_COLUMNS = "configuration_id SERIAL PRIMARY KEY, name TEXT NOT NULL UNIQUE, value TEXT NOT NULL"
+TABLE_CONFIGURATION_INIT = [["tweet_every_x_minutes","30"],
+                     ["last_tweet_date","0"]]
