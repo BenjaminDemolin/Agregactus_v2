@@ -99,7 +99,7 @@ def get_best_tweet(tweet_list, tweet_size=260):
         print("---ask openai for best tweet---")
         i = 1
         nb_tweet_valid = 0
-        body = "Retourne juste le numéro du meilleur tweet parmi les suivants : \n\n"
+        body = "Retourne juste le numéro du tweet le plus important parmi les suivants : \n\n"
         for tweet in tweet_list:
             openai_tweet = tweet[2]
             # if tweet is inferior to max size then add it to the body

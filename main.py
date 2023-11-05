@@ -91,11 +91,11 @@ def main():
 
         # get article list, parameter is the number of articles to get by website
         print("----GET ARTICLES----")
-        dict_articles = webscrapping_f.get_all_articles(1)
+        #dict_articles = webscrapping_f.get_all_articles(1)
 
         #  add articles url to database
         print("----ADD ARTICLES TO DATABASE----")
-        webscrapping_f.add_articles_to_database(dict_articles)
+        #webscrapping_f.add_articles_to_database(dict_articles)
 
         # if chatgpt limit is not reached, summarize all articles and add in database
         print("----SUMMARIZE ALL ARTICLES----")
