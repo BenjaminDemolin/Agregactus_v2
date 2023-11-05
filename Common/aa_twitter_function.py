@@ -99,7 +99,7 @@ class Twitter:
         self.open_twitter()
         if("Connectez‑vous à&nbsp;X" in self.driver.page_source or "Sign in to X" in self.driver.page_source):
             self.login_email()
-            if ("Entrez votre adresse email ou votre nom d'utilisateur" in self.driver.page_source or "Enter your email address or username" in self.driver.page_source):
+            if ("Entrez votre adresse email ou votre nom d'utilisateur" in self.driver.page_source or "Enter your phone number or username" in self.driver.page_source):
                 self.login_username()
             self.login_password()
         self.tweet(tweet)

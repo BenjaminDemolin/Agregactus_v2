@@ -99,6 +99,7 @@ def get_best_tweet(tweet_list, tweet_size=260):
         print("---ask openai for best tweet---")
         i = 1
         nb_tweet_valid = 0
+        index_only_one_tweet = -1
         body = "Retourne juste le numéro du tweet le plus important parmi les suivants : \n\n"
         for tweet in tweet_list:
             openai_tweet = tweet[2]
@@ -106,12 +107,13 @@ def get_best_tweet(tweet_list, tweet_size=260):
             if(len(openai_tweet) < tweet_size):
                 body += str(i) + " : " + openai_tweet + "\n\n"
                 nb_tweet_valid += 1
+                index_only_one_tweet = i-1
             i += 1
         # if no tweet is inferior to max size then return false
         if(nb_tweet_valid == 0):
             return -2
         if(nb_tweet_valid == 1):
-            return tweet_list[i - 1]
+            return tweet_list[index_only_one_tweet]
         # else ask openai for the best tweet
         tweet_number = openai_request(body,temperature=0,max_tokens=100)
         print("openai best tweet : " + tweet_number)
