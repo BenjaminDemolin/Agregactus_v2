@@ -12,11 +12,12 @@ import pyperclip
 
 class Twitter:
 
-    def __init__(self, email, username, password,os ='linux', profile='',firefox_binary_location = '/usr/bin/firefox'):
+    def __init__(self, email, username, password, sleep_time,os ='linux', profile='',firefox_binary_location = '/usr/bin/firefox'):
         self.email = email
         self.username = username
         self.password = password
         self.os = os.lower
+        self.sleep_time = int(sleep_time)
         # Define browser options
         firefox_options = Options()
         if(self.os == 'linux'):
@@ -26,13 +27,13 @@ class Twitter:
         self.driver.maximize_window()
         # Define WebDriverWait
         self.wait = WebDriverWait(self.driver, 30)
-        time.sleep(5)
+        time.sleep(self.sleep_time)
 
     def open_twitter(self):
         print("---open_twitter---")
         # Open Twitter login page
         self.driver.get('https://www.twitter.com/login')
-        time.sleep(5)
+        time.sleep(self.sleep_time)
 
     def login_email(self):
         print("---login_email---")
@@ -41,7 +42,7 @@ class Twitter:
         email_input.send_keys(self.email)
         # Click on the 'Suivant' button
         self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'Suivant')]"))).click()
-        time.sleep(5)
+        time.sleep(self.sleep_time)
 
     def login_username(self):
         print("---login_username---")
@@ -51,7 +52,7 @@ class Twitter:
         
         # Click on the 'Suivant' button
         self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'Suivant')]"))).click()
-        time.sleep(5)
+        time.sleep(self.sleep_time)
     
     def login_password(self):
         print("---login_password---")
@@ -61,7 +62,7 @@ class Twitter:
 
         # Click on the 'Se connecter' button
         self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'connecter')]"))).click()
-        time.sleep(5)
+        time.sleep(self.sleep_time)
 
     def tweet(self, tweet):
         print("---tweet---")
@@ -70,7 +71,7 @@ class Twitter:
         actions = ActionChains(self.driver)
         actions.send_keys('n')
         actions.perform()
-        time.sleep(5)
+        time.sleep(self.sleep_time)
 
         # Copy content to paste
         if(self.os == 'LINUX'):
@@ -82,12 +83,12 @@ class Twitter:
         # Paste content in the input field
         actions.key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL)
         actions.perform()
-        time.sleep(5)
+        time.sleep(self.sleep_time)
 
         # Press Enter to send the tweet
         actions.key_down(Keys.CONTROL).send_keys(Keys.RETURN)
         actions.perform()
-        time.sleep(5)
+        time.sleep(self.sleep_time)
 
     def quit(self):
         print("---quit---")
