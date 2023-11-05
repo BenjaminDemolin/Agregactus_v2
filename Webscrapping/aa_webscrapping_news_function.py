@@ -106,7 +106,11 @@ def summarize_all_articles():
                 article = france24_f.get_article_text(link)
             if("francetvinfo" in link):
                 article = francetvinfo_f.get_article_text(link)
+            print("--------------------")
+            print(article)
             article = summarize_text(article)
+            print("--------------------")
+            print(article)
             # replace ' by '' for sql otherwise it will not work
             tweet = openai_f.article_to_tweet_chatgpt(article)
             tweet = drop_first_last_character(tweet)

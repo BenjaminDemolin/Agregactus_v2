@@ -34,8 +34,8 @@ import Webscrapping.aa_webscrapping_france24_function as france24_f
 
 #print(france24_f.get_all_articles())
 #print(str(france24_f.get_all_articles()[0]).strip("{").strip("}").strip("'"))
-article = france24_f.get_article_text(str(france24_f.get_all_articles()[0]).strip("{").strip("}").strip("'")).strip(" ")
-print(article)
+#article = france24_f.get_article_text(str(france24_f.get_all_articles()[0]).strip("{").strip("}").strip("'")).strip(" ")
+#print(article)
 
 import Database.aa_global_database_function as globaldb_f
 
@@ -77,14 +77,12 @@ import Common.aa_mail_function as mail_f
 #mail_f.send_email(secret["SENDER_EMAIL"],secret["SENDER_PASSWORD"],secret["RECEIVER_EMAIL"],"test","test")
 
 
-print("------")
-print("------")
-print("------")
-
-
-
 
 # Example usage
-text_to_summarize = article
-summary = webscrapping_f.summarize_text(text_to_summarize)
-print(summary)
+#text_to_summarize = article
+#summary = webscrapping_f.summarize_text(text_to_summarize)
+#print(summary)
+
+
+url = "https://www.france24.com/fr/france/20231105-durcir-choisir-restreindre-en-france-une-trentaine-de-lois-immigration-en-40-ans"
+print(france24_f.get_article_text(url))
