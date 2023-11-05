@@ -6,18 +6,22 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
+import subprocess
 import time
 import pyperclip
 
 class Twitter:
 
-    def __init__(self, email, username, password, options=''):
+    def __init__(self, email, username, password,os ='linux', profile='',firefox_binary_location = '/usr/bin/firefox'):
         self.email = email
         self.username = username
         self.password = password
+        self.os = os.lower
         # Define browser options
         firefox_options = Options()
-        firefox_options.profile = webdriver.FirefoxProfile(options)
+        if(self.os == 'linux'):
+            firefox_options.binary_location = firefox_binary_location
+        firefox_options.profile = webdriver.FirefoxProfile(profile)
         self.driver = webdriver.Firefox(options=firefox_options)
         self.driver.maximize_window()
         # Define WebDriverWait
@@ -69,8 +73,12 @@ class Twitter:
         time.sleep(5)
 
         # Copy content to paste
-        pyperclip.copy(tweet)
+        if(self.os == 'LINUX'):
+            subprocess.run(['xclip', '-selection', 'clipboard'], input=tweet.encode('utf-8'))
+        else:
+            pyperclip.copy(tweet)
 
+        
         # Paste content in the input field
         actions.key_down(Keys.CONTROL).send_keys('v').key_up(Keys.CONTROL)
         actions.perform()

@@ -77,7 +77,7 @@ def tweet():
             name = localdb_f.get_website_name_by_id(website_id)
             url = best_tweet_info[1]
             tweet = best_tweet_info[2] + "\n(source : " + name + ")"
-            twitter_obj = twitter_f.Twitter(secret["TWITTER_EMAIL"], secret["TWITTER_USERNAME"], secret["TWITTER_PASSWORD"], secret["FIREFOX_PROFILE"])
+            twitter_obj = twitter_f.Twitter(secret["TWITTER_EMAIL"], secret["TWITTER_USERNAME"], secret["TWITTER_PASSWORD"], os=secret["OS"],profile=secret["FIREFOX_PROFILE"], firefox_binary_location=secret["FIREFOX_BINARY_LOCATION"])
             twitter_obj.auto_tweet(tweet)
             localdb_f.update_configuration_value_by_name("last_tweet_date", current_timestamp)
             localdb_f.update_tweet_sent_news_table(url)
