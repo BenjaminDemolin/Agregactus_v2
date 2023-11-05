@@ -58,7 +58,8 @@ def openai_request(content, role="system", model="gpt-3.5-turbo", temperature=0.
 """
 def article_to_tweet_chatgpt(article):
     try:
-        return openai_request(content="Fait un tweet percutent en français en restant neutre à partir de l'article suivant : \n" + article)
+        return openai_request(content="Fait un tweet court et percutent en français en restant neutre à partir de l'article suivant : \n" + article)
+        # return openai_request(content="Fait un tweet percutent en français en restant neutre à partir de l'article suivant : \n" + article)
     except Exception as e:
         print(e)
         return e
@@ -93,19 +94,26 @@ def article_question_chatgpt(article):
         print(e)
         return e
 
-def get_best_tweet(tweet_list):
+def get_best_tweet(tweet_list, tweet_size=260):
     try:
         print("---ask openai for best tweet---")
         i = 1
+        nb_tweet_valid = 0
         body = "Retourne juste le numéro du tweet qui ferait le plus réagir parmi les suivants : \n\n"
         for tweet in tweet_list:
-            website_id = tweet[0]
-            url = tweet[1]
             openai_tweet = tweet[2]
-            body += str(i) + " : " + openai_tweet + "\n\n"
+            # if tweet is inferior to max size then add it to the body
+            if(len(openai_tweet) < tweet_size):
+                body += str(i) + " : " + openai_tweet + "\n\n"
+                nb_tweet_valid += 1
             i += 1
+        # if no tweet is inferior to max size then return false
+        if(nb_tweet_valid == 0):
+            return -2
+        # else ask openai for the best tweet
         tweet_number = openai_request(body,temperature=0,max_tokens=100)
         print("openai best tweet : " + tweet_number)
+        # if openai return a valid tweet number then return the tweet (not Rate limit reached)
         if("Rate limit reached" not in tweet_number):
             for i in range(len(tweet_list), 0, -1):
                 if(str(i) in tweet_number):
@@ -113,7 +121,7 @@ def get_best_tweet(tweet_list):
                     break
             return tweet_list[tweet_number - 1]
         else:
-            return False
+            return -1
     except Exception as e:
         print(e)
         return e

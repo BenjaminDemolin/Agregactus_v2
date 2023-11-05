@@ -22,6 +22,7 @@ class Twitter:
         self.driver.maximize_window()
         # Define WebDriverWait
         self.wait = WebDriverWait(self.driver, 30)
+        time.sleep(5)
 
     def open_twitter(self):
         print("---open_twitter---")
