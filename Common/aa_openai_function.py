@@ -110,6 +110,8 @@ def get_best_tweet(tweet_list, tweet_size=260):
         # if no tweet is inferior to max size then return false
         if(nb_tweet_valid == 0):
             return -2
+        if(nb_tweet_valid == 1):
+            return tweet_list[i - 1]
         # else ask openai for the best tweet
         tweet_number = openai_request(body,temperature=0,max_tokens=100)
         print("openai best tweet : " + tweet_number)
