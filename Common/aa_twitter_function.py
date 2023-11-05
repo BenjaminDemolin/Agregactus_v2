@@ -33,6 +33,7 @@ class Twitter:
         print("---open_twitter---")
         # Open Twitter login page
         self.driver.get('https://www.twitter.com/login')
+        self.wait.until(EC.title_contains("X"))
         time.sleep(self.sleep_time)
 
     def login_email(self):
