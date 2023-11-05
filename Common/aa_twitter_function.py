@@ -42,7 +42,7 @@ class Twitter:
         email_input = self.wait.until(EC.visibility_of_element_located((By.NAME, "text")))
         email_input.send_keys(self.email)
         # Click on the 'Suivant' button
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'Suivant')]"))).click()
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'Suivant') or contains(.,'Next')]"))).click()
         time.sleep(self.sleep_time)
 
     def login_username(self):
@@ -52,7 +52,7 @@ class Twitter:
         username_input.send_keys(self.username)
         
         # Click on the 'Suivant' button
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'Suivant')]"))).click()
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'Suivant') or contains(.,'Next')]"))).click()
         time.sleep(self.sleep_time)
     
     def login_password(self):
@@ -62,7 +62,7 @@ class Twitter:
         password_input.send_keys(self.password)
 
         # Click on the 'Se connecter' button
-        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'connecter')]"))).click()
+        self.wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@role='button'][contains(.,'connecter') or contains(.,'Log in')]"))).click()
         time.sleep(self.sleep_time)
 
     def tweet(self, tweet):
@@ -97,9 +97,9 @@ class Twitter:
 
     def auto_tweet(self, tweet):
         self.open_twitter()
-        if("Connectez‑vous à&nbsp;X" in self.driver.page_source):
+        if("Connectez‑vous à&nbsp;X" in self.driver.page_source or "Sign in to X" in self.driver.page_source):
             self.login_email()
-            if "Entrez votre adresse email ou votre nom d'utilisateur" in self.driver.page_source:
+            if ("Entrez votre adresse email ou votre nom d'utilisateur" in self.driver.page_source or "Enter your email address or username" in self.driver.page_source):
                 self.login_username()
             self.login_password()
         self.tweet(tweet)
