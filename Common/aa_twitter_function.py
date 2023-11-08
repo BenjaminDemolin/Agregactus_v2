@@ -75,7 +75,7 @@ class Twitter:
         time.sleep(self.sleep_time)
 
         # Copy content to paste
-        if(self.os == 'LINUX'):
+        if(self.os == 'linux'):
             subprocess.run(['xclip', '-selection', 'clipboard'], input=tweet.encode('utf-8'))
         else:
             pyperclip.copy(tweet)

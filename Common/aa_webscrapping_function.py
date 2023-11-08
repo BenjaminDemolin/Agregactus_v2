@@ -101,3 +101,25 @@ def find_tag_text(text, selector, cloudflare=False, cloudflare_class=False):
     except Exception as e:
         print(e)
         return e
+
+"""
+    Description:
+        Get text from a given text and a given selector (tag)
+    Parameters:
+        text: string
+        selector: string
+        cloudflare: boolean. If true, use cloudscraper to bypass cloudflare protection
+        cloudflare_class: boolean. If true, use class_ instead of tag
+    Return:
+        text: string
+"""
+def get_text_from_tag(url, selector, cloudflare=False, cloudflare_class=False):
+    try:
+        text = find_tag(url, selector, cloudflare=False, cloudflare_class=False)
+        if(len(text) == 0):
+            return ""
+        else:
+            return text[0].text
+    except Exception as e:
+        print(e)
+        return e

@@ -34,14 +34,13 @@ def get_all_articles(num_articles=20):
 """
 def get_article_text(url):
     try:
-        article = webscrapping_f.find_tag(url,".t-content__title")[0].text
-        article += "\n"
-        article += webscrapping_f.find_tag(url,".t-content__chapo")[0].text
-        article += "\n"
-        article += webscrapping_f.find_tag(url,".t-content__body")[0].text
+        article = webscrapping_f.get_text_from_tag(url,".t-content__title") + "\n"
+        article += webscrapping_f.get_text_from_tag(url,".t-content__chapo") + "\n"
+        article += webscrapping_f.get_text_from_tag(url,".t-content__title") + "\n"
         for tag in webscrapping_f.find_tag(url,".o-self-promo"):
             article = article.replace(tag.text,"")
         return article
     except Exception as e:
         print(e)
         return e
+    

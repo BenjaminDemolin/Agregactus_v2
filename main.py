@@ -59,16 +59,23 @@ def tweet():
             print("no tweet to send")
             return False
         # if only one tweet, no need to compare
-        if(len(tweet_list) == 1 & len(tweet_list[0][2]) <= 260):
+        if(len(tweet_list) == 1 & len(tweet_list[0][2]) <= int(secret["TWITTER_MAX_TWEET_SIZE"])):
             best_tweet_info = tweet_list[0]
         else:
             best_tweet_info = openai_f.get_best_tweet(tweet_list, int(secret["TWITTER_MAX_TWEET_SIZE"]))
         
+        # if best tweet is -1, it means that chatgpt limit is reached
         if(best_tweet_info == -1):
             print("Rate limit reached, try again later")
             return False
+        # if best tweet is -2, it means that all tweet are too long
         elif(best_tweet_info == -2):
             print("no tweet to send (all tweet are too long)")
+            localdb_f.update_configuration_value_by_name("last_tweet_date", current_timestamp)
+            return False
+        # if best tweet is -3, it means that chatgpt didn't return a valid tweet number
+        elif(best_tweet_info == -3):
+            print("ChatGPT didn't return a valid tweet number")
             localdb_f.update_configuration_value_by_name("last_tweet_date", current_timestamp)
             return False
         else:
@@ -76,7 +83,8 @@ def tweet():
             website_id = best_tweet_info[0]
             name = localdb_f.get_website_name_by_id(website_id)
             url = best_tweet_info[1]
-            tweet = best_tweet_info[2] + "\n(source : " + name + ")"
+            #tweet = best_tweet_info[2] + "\n(source : " + name + ")"
+            tweet = best_tweet_info[2]
             twitter_obj = twitter_f.Twitter(secret["TWITTER_EMAIL"], secret["TWITTER_USERNAME"], secret["TWITTER_PASSWORD"], secret["FIREFOX_SLEEP_TIME"],os=secret["OS"],profile=secret["FIREFOX_PROFILE"], firefox_binary_location=secret["FIREFOX_BINARY_LOCATION"])
             twitter_obj.auto_tweet(tweet)
             localdb_f.update_configuration_value_by_name("last_tweet_date", current_timestamp)
@@ -91,22 +99,24 @@ def main():
 
         # get article list, parameter is the number of articles to get by website
         print("----GET ARTICLES----")
-        #dict_articles = webscrapping_f.get_all_articles(1)
+        dict_articles = webscrapping_f.get_all_articles(1)
 
         #  add articles url to database
         print("----ADD ARTICLES TO DATABASE----")
-        #webscrapping_f.add_articles_to_database(dict_articles)
+        webscrapping_f.add_articles_to_database(dict_articles)
 
         # if chatgpt limit is not reached, summarize all articles and add in database
         print("----SUMMARIZE ALL ARTICLES----")
-        webscrapping_f.summarize_all_articles()
-        
-        print("--TWEET--")
-        if(tweet()):
-            print("tweeted")
+        if(webscrapping_f.summarize_all_articles()):        
+            print("--TWEET--")
+            if(tweet()):
+                print("tweeted")
+            else:
+                print("not tweeted")
+            time.sleep(60*5)
         else:
-            print("not tweeted")
-        time.sleep(60*5)
+            print("--WAIT A MINUTE--")
+            time.sleep(60)
 
 
 

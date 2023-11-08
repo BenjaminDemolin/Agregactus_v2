@@ -109,11 +109,11 @@ def summarize_all_articles():
             article = summarize_text(article)
             # replace ' by '' for sql otherwise it will not work
             tweet = openai_f.article_to_tweet_chatgpt(article)
-            tweet = drop_first_last_character(tweet)
-            current_utc_time = datetime.now(timezone.utc)
-            date = int(current_utc_time.timestamp())
-            print("- " + tweet)
-            if("Rate limit reached" not in tweet):
+            if(isinstance(tweet, str)):
+                tweet = drop_first_last_character(tweet)
+                current_utc_time = datetime.now(timezone.utc)
+                date = int(current_utc_time.timestamp())
+                print("- " + tweet)
                 localdb_f.update_tweet_news_table(link,ia_tweet=tweet,date=date)
             else:
                 print("Rate limit reached")

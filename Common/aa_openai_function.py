@@ -101,6 +101,7 @@ def get_best_tweet(tweet_list, tweet_size=260):
         nb_tweet_valid = 0
         index_only_one_tweet = -1
         body = "Retourne juste le numéro du tweet le plus important parmi les suivants : \n\n"
+        #body = "Retourne juste le numéro du tweet le plus important parmi les suivants en priviligient les conflits puis la polique puis les faits divers : \n\n"
         for tweet in tweet_list:
             openai_tweet = tweet[2]
             # if tweet is inferior to max size then add it to the body
@@ -116,14 +117,18 @@ def get_best_tweet(tweet_list, tweet_size=260):
             return tweet_list[index_only_one_tweet]
         # else ask openai for the best tweet
         tweet_number = openai_request(body,temperature=0,max_tokens=100)
-        print("openai best tweet : " + tweet_number)
+        number = -3
         # if openai return a valid tweet number then return the tweet (not Rate limit reached)
-        if("Rate limit reached" not in tweet_number):
+        if(isinstance(tweet_number, str)):
+            print("openai best tweet : " + tweet_number)
             for i in range(len(tweet_list), 0, -1):
                 if(str(i) in tweet_number):
-                    tweet_number = i
+                    number = i
                     break
-            return tweet_list[tweet_number - 1]
+            if(number == -3):
+                return -3
+            else:
+                return tweet_list[number - 1]
         else:
             return -1
     except Exception as e:

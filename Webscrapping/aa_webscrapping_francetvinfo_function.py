@@ -34,10 +34,10 @@ def get_all_articles(num_articles=20):
 """
 def get_article_text(url):
     try:
-        titre = webscrapping_f.find_tag(url,".c-title")[0].text
-        intro = webscrapping_f.find_tag(url,".c-chapo")[0].text
-        corps = webscrapping_f.find_tag(url,".c-body")[0].text
-        return titre + "\n" + intro + "\n" + corps
+        article = webscrapping_f.get_text_from_tag(url,".c-title") + "\n"
+        article += webscrapping_f.get_text_from_tag(url,".c-chapo") + "\n"
+        article += webscrapping_f.get_text_from_tag(url,".c-body") + "\n"
+        return article
     except Exception as e:
         print(e)
         return e
