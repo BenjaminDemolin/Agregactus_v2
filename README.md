@@ -15,9 +15,9 @@ Agregactus is your go-to tool for effortlessly staying informed and sharing summ
 ## Getting Started
 
 ### Prerequisites
-Python 3.x
-PostgreSQL (can use Docker image)
-Dependencies listed in requirements.txt
+Python 3.x  
+PostgreSQL (can use Docker image)  
+Dependencies listed in requirements.txt  
 
 ### Installation
 Clone the repository:
@@ -32,8 +32,8 @@ pip install -r requirements.txt
 
 This link can help you to install Firefox on Ubuntu (default firefox installation is not always working):
 https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04#:%7E:text=Installing%20Firefox%20via%20Apt%20(Not%20Snap)&text=You%20add%20the%20Mozilla%20Team,%2C%20bookmarks%2C%20and%20other%20data.
-Default Firefox profile path : /home/username/.mozilla/firefox/xxxxxxxx.default-release
-Default Firefox binary location : /usr/bin/firefox
+Default Firefox profile path : /home/username/.mozilla/firefox/xxxxxxxx.default-release  
+Default Firefox binary location : /usr/bin/firefox  
 
 xclip is also required for Linux:
 ```bash
