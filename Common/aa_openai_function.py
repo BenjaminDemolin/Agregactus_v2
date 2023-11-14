@@ -43,6 +43,8 @@ def openai_request(content, role="system", model="gpt-3.5-turbo", temperature=0.
         chatgpt_content = ""
         if(len(response['choices']) > 0):
             chatgpt_content = str(response['choices'][0]['message']['content']).replace("'", "''")
+            if(chatgpt_content[0] == '"'):
+                chatgpt_content = chatgpt_content.replace('"', "")
         return chatgpt_content
     except Exception as e:
         print(e)
@@ -63,73 +65,59 @@ def article_to_tweet_chatgpt(article):
     except Exception as e:
         print(e)
         return e
-    
-"""
-    Description:
-        Use chatgpt to categorize a given article
-    Parameters:
-        article: string
-    Return:
-        response: string
-"""
-def article_category_chatgpt(article):
-    try:
-        return openai_request(article + "\n\nclassifie le tweet dans un de ces types: actualités nationales et internationales, économie, culture, science, sports, environnement , faits divers, santé, technologie, politique. Retourne juste le type en réponse")
-    except Exception as e:
-        print(e)
-        return e
-    
-"""
-    Description:
-        Use chatgpt to generate a question from a given article
-    Parameters:
-        article: string
-    Return:
-        response: string
-"""
-def article_question_chatgpt(article):
-    try:
-        return openai_request("Pose une question ouverte sur le tweet suivant : \n\n" + article)
-    except Exception as e:
-        print(e)
-        return e
 
-def get_best_tweet(tweet_list, tweet_size=260):
+"""
+    Description:
+        Ask to chatgpt which tweet is the best in a list of tweets
+    Parameters:
+        tweet_list: list
+        tweet_size: int
+    Return:
+        tweet: array tweet infos
+                -1: Rate limit reached
+                -2: No valid tweet
+                -3: No valid tweet number
+"""
+def get_best_tweet(tweet_list, tweet_size=280):
     try:
         print("---ask openai for best tweet---")
-        i = 1
+        # Number of tweet in the list with a size inferior to max size
         nb_tweet_valid = 0
+        # Index of the only tweet with a size inferior to max size if there is only one
         index_only_one_tweet = -1
+        # Body of the openai request
         body = "Retourne juste le numéro du tweet le plus important parmi les suivants : \n\n"
-        #body = "Retourne juste le numéro du tweet le plus important parmi les suivants en priviligient les conflits puis la polique puis les faits divers : \n\n"
-        for tweet in tweet_list:
+        for i, tweet in enumerate(tweet_list):
             openai_tweet = tweet[2]
             # if tweet is inferior to max size then add it to the body
             if(len(openai_tweet) < tweet_size):
                 body += str(i) + " : " + openai_tweet + "\n\n"
                 nb_tweet_valid += 1
-                index_only_one_tweet = i-1
-            i += 1
+                index_only_one_tweet = i
         # if no tweet is inferior to max size then return false
         if(nb_tweet_valid == 0):
             return -2
+        # if only one tweet is inferior to max size then return it
         if(nb_tweet_valid == 1):
             return tweet_list[index_only_one_tweet]
         # else ask openai for the best tweet
-        tweet_number = openai_request(body,temperature=0,max_tokens=100)
-        number = -3
+        tweet_number_str = openai_request(body,temperature=0,max_tokens=100)
+        tweet_number_int = -3
         # if openai return a valid tweet number then return the tweet (not Rate limit reached)
-        if(isinstance(tweet_number, str)):
-            print("openai best tweet : " + tweet_number)
+        if(isinstance(tweet_number_str, str)):
+            print("openai best tweet : " + tweet_number_str)
             for i in range(len(tweet_list), 0, -1):
-                if(str(i) in tweet_number):
-                    number = i
+                if(str(i) in tweet_number_str):
+                    tweet_number_int = i
                     break
-            if(number == -3):
+            # if no int found in the openai response then return -3
+            if(tweet_number_int == -3):
                 return -3
+            # else return the tweet infos
             else:
-                return tweet_list[number - 1]
+                return tweet_list[tweet_number_int - 1]
         else:
+            # if openai return an error then return -1
             return -1
     except Exception as e:
         print(e)

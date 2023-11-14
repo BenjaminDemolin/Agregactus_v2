@@ -1,8 +1,8 @@
-import Common.aa_webscrapping_function as webscrapping_f
+import Common.aa_webscraping_function as webscraping_f
 import Database.aa_local_database_function as localdb_f
 
 """
-    File name: aa_webscrapping_france24_function.py
+    File name: aa_webscraping_france24_function.py
     Description: This file contains functions to extract data from france24 website
 """
 
@@ -19,7 +19,7 @@ import Database.aa_local_database_function as localdb_f
 def get_all_articles(num_articles=20):
     try:
         url = localdb_f.get_website_url_by_name("france24")
-        return webscrapping_f.get_articles_links(url,".news__content")[:num_articles]
+        return webscraping_f.get_articles_links(url,".news__content")[:num_articles]
     except Exception as e:
         print(e)
         return e
@@ -34,10 +34,10 @@ def get_all_articles(num_articles=20):
 """
 def get_article_text(url):
     try:
-        article = webscrapping_f.get_text_from_tag(url,".t-content__title") + "\n"
-        article += webscrapping_f.get_text_from_tag(url,".t-content__chapo") + "\n"
-        article += webscrapping_f.get_text_from_tag(url,".t-content__title") + "\n"
-        for tag in webscrapping_f.find_tag(url,".o-self-promo"):
+        article = webscraping_f.get_text_from_tag(url,".t-content__title") + "\n"
+        article += webscraping_f.get_text_from_tag(url,".t-content__chapo") + "\n"
+        article += webscraping_f.get_text_from_tag(url,".t-content__title") + "\n"
+        for tag in webscraping_f.find_tag(url,".o-self-promo"):
             article = article.replace(tag.text,"")
         return article
     except Exception as e:

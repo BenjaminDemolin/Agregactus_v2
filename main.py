@@ -1,19 +1,29 @@
 from dotenv import dotenv_values
 import datetime as dt
 import Database.aa_local_database_function as localdb_f
-import Webscrapping.aa_webscrapping_news_function as webscrapping_f
-import Common.aa_mail_function as mail_f
+import Webscraping.aa_webscraping_news_function as webscraping_f
 import Common.aa_twitter_function as twitter_f
 import Common.aa_openai_function as openai_f
 import time
 
 secret = dotenv_values(".env")
 
+"""
+    File name: main.py
+    Description: This file contains the main function
+"""
+
+"""
+    Description:
+        Verify if database are good
+    Parameters:
+        None
+    Return:
+        None
+"""
 def verify_database():
     if(localdb_f.table_websites_exists() == False):
         localdb_f.create_websites_table()
-    if(localdb_f.table_main_category_exists() == False):
-        localdb_f.create_main_category_table()
     if(localdb_f.table_news_exists() == False):
         localdb_f.create_news_table()
     if(localdb_f.table_configuration_exists() == False):
@@ -23,34 +33,20 @@ def verify_database():
     if(len(localdb_f.get_all_configuration()) == 0):
         localdb_f.init_configuration_table()
     
-
-def format_tweet(tweet, source):
-    return tweet + "\n(source : " + source + ")"
-
-def send_email():
-    try:
-        data = localdb_f.get_article_to_send_by_email()
-        for article in data:
-            website_id = article[0]
-            name = localdb_f.get_website_name_by_id(website_id)
-            url = article[1]
-            tweet = format_tweet(article[2], name)
-            question = article[3]
-            body = "url : \n" + url + "\n\n\n" + "tweet : \n" + tweet + "\n\n\n" + "question : \n" + question
-            mail_sent = mail_f.send_email(secret["SENDER_EMAIL"], secret["SENDER_PASSWORD"], secret["RECEIVER_EMAIL"], url, body)
-            if(mail_sent):
-                localdb_f.update_email_sent_news_table(url)
-    except Exception as e:
-        print(e)
-        return False
-
+"""
+    Description:
+        Get best tweet and send it 
+    Parameters:
+        None
+    Return:
+        None
+"""
 def tweet():
     # init variables
     tweet_every_x_minutes = int(localdb_f.get_configuration_value_by_name("tweet_every_x_minutes"))
     last_tweet_date = int(localdb_f.get_configuration_value_by_name("last_tweet_date"))
     current_timestamp = int(dt.datetime.now().timestamp())
     best_tweet_info = False
-
     # if last tweet date is more than tweet_every_x_minutes, get best tweet and send it
     if(current_timestamp - last_tweet_date > tweet_every_x_minutes * 60):
         tweet_list = localdb_f.get_tweet_since_date(last_tweet_date)
@@ -63,7 +59,6 @@ def tweet():
             best_tweet_info = tweet_list[0]
         else:
             best_tweet_info = openai_f.get_best_tweet(tweet_list, int(secret["TWITTER_MAX_TWEET_SIZE"]))
-        
         # if best tweet is -1, it means that chatgpt limit is reached
         if(best_tweet_info == -1):
             print("Rate limit reached, try again later")
@@ -91,33 +86,38 @@ def tweet():
             localdb_f.update_tweet_sent_news_table(url)
             return True
 
+"""
+    Description:
+        Main function
+    Parameters:
+        None
+    Return:
+        None
+"""
 def main():
     while True:
         # check if database are good
         print("----VERIFY DATABASE----")
         verify_database()
-
         # get article list, parameter is the number of articles to get by website
         print("----GET ARTICLES----")
-        dict_articles = webscrapping_f.get_all_articles(1)
-
+        dict_articles = webscraping_f.get_all_articles(1)
         #  add articles url to database
         print("----ADD ARTICLES TO DATABASE----")
-        webscrapping_f.add_articles_to_database(dict_articles)
-
+        webscraping_f.add_articles_to_database(dict_articles)
         # if chatgpt limit is not reached, summarize all articles and add in database
         print("----SUMMARIZE ALL ARTICLES----")
-        if(webscrapping_f.summarize_all_articles()):        
+        if(webscraping_f.summarize_all_articles()):        
             print("--TWEET--")
             if(tweet()):
                 print("tweeted")
             else:
                 print("not tweeted")
+            print("--WAIT 5 MINUTE | %s--" % (dt.datetime.now().strftime("%H:%M:%S")))
             time.sleep(60*5)
         else:
-            print("--WAIT A MINUTE--")
+            print("--WAIT A MINUTE | %s--" % (dt.datetime.now().strftime("%H:%M:%S")))
             time.sleep(60)
-
 
 
 if __name__ == "__main__":
