@@ -36,7 +36,7 @@ def get_article_text(url):
     try:
         article = webscraping_f.get_text_from_tag(url,".t-content__title") + "\n"
         article += webscraping_f.get_text_from_tag(url,".t-content__chapo") + "\n"
-        article += webscraping_f.get_text_from_tag(url,".t-content__title") + "\n"
+        article += webscraping_f.get_text_from_tag(url,".t-content__body") + "\n"
         for tag in webscraping_f.find_tag(url,".o-self-promo"):
             article = article.replace(tag.text,"")
         return article
