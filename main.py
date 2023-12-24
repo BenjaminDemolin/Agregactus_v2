@@ -12,7 +12,7 @@ secret = dotenv_values(".env")
     File name: main.py
     Description: This file contains the main function
 """
-
+       
 """
     Description:
         Verify if database are good
@@ -49,6 +49,8 @@ def tweet():
     best_tweet_info = False
     # if last tweet date is more than tweet_every_x_minutes, get best tweet and send it
     if(current_timestamp - last_tweet_date > tweet_every_x_minutes * 60):
+        if(last_tweet_date > 0):
+            last_tweet_date = last_tweet_date - tweet_every_x_minutes * 60 * 3
         tweet_list = localdb_f.get_tweet_since_date(last_tweet_date)
         # if no tweet to send, return false
         if(len(tweet_list) == 0):

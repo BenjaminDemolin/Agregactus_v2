@@ -44,9 +44,15 @@ class Twitter:
             firefox_options.binary_location = firefox_binary_location
         firefox_options.profile = webdriver.FirefoxProfile(profile)
         self.driver = webdriver.Firefox(options=firefox_options)
-        self.driver.maximize_window()
+        #self.driver.maximize_window()
         # Define WebDriverWait
         self.wait = WebDriverWait(self.driver, 30)
+                # Set window size to half of the screen
+        screen_width = self.driver.execute_script("return window.screen.width;")
+        screen_height = self.driver.execute_script("return window.screen.height;")
+        half_width = screen_width // 2
+        half_height = screen_height
+        self.driver.set_window_size(half_width, half_height)
         time.sleep(self.sleep_time)
 
     """ 

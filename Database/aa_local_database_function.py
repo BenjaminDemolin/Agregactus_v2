@@ -288,7 +288,7 @@ def update_tweet_sent_news_table(url):
 
 def get_tweet_since_date(date_timestamp):
     try:
-        return connector.select_rows(TABLE_NEWS_NAME,columns='website_id,url,ia_tweet',condition="ia_tweet != 'NULL' AND date > %s" % (date_timestamp))
+        return connector.select_rows(TABLE_NEWS_NAME,columns='website_id,url,ia_tweet',condition="ia_tweet != 'NULL' AND date > %s AND tweet_sent = false" % (date_timestamp))
     except Exception as e:
         print(e)
         return False
